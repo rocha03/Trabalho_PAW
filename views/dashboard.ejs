@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+<body>
+    <%-  include('./partials/nav.ejs') %>
+
+    <div>
+        <a href="">Serviços</a>
+
+        <ul>
+            <% Servicos.array.forEach(element => { %>
+                <li><%= element.name %></li>
+            <% }); %>
+        </ul>
+    </div>
+
+    <%-  include('./partials/footer.ejs') %>
+</body>
+</html>
