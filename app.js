@@ -5,14 +5,16 @@ const mongoose = require('mongoose');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const { checkUser } = require('./public/scripts/auth');
+
 var indexRouter = require('./routes/index');
-var registerRouter = require('./routes/auth/register');
-var loginRouter = require('./routes/auth/login');
+var authRouter = require('./routes/auth');
 var dashboardRouter = require('./routes/dashboard');
-var usersRouter = require('./routes/users');
+var adminRouter = require('./routes/admin');
+var usersRouter = require('./routes/user');
 
 //conect to db
-const uri = "mongodb+srv://whomever:Un1RhYblz3nM68Gr@cluster0.wlcpots.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://whomever:Un1RhYblz3nM68Gr@cluster0.wlcpots.mongodb.net/CulturaTix";
 mongoose.connect(uri)
   .then((result) => console.log('conected to db'));
 
@@ -28,11 +30,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('*', checkUser);
 app.use('/', indexRouter);
-app.use('/register', registerRouter);
-app.use('/login', loginRouter);
+app.use('/auth', authRouter);
+app.use('/admin', adminRouter);
 app.use('/dashboard', dashboardRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -47,7 +50,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('404');
+  res.render('404', { title: '404' });
 });
 
 module.exports = app;

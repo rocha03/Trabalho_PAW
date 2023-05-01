@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../partials/head.ejs") %>
+<body>
+    <%-  include('../partials/nav.ejs') %>
+    
+    <h2><%= service.name %></h2>
+
+    <ul>
+        <li><%= type.name %></li>
+        <li><%= service.desciption %></li>
+    </ul>
+
+    <div>
+        <h2>Bilhetes:</h2>
+        <% if (service.ticketPrices.length > 0) { %>
+            <ul>
+                <% service.forEach(ticket => { %>
+                    <li><%= ticket.name %> - <%= ticket.value %></li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>Não há bilhetes de momento.</p>
+        <% } %>
+
+        <% if (user.admin) { %>
+            <a href="/admin/servico/edit/<%= service._id %>">Editar Serviço</a>
+            <form action="/admin/servico/delete/<%= service._id %>" method="post">
+                <button type="submit">Remover Serviço</button>
+            </form>
+        <% } else { %>
+        <% } %>
+    </div>
+
+    <%-  include('../partials/footer.ejs') %>
+</body>
+</html>

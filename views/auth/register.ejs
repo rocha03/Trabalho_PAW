@@ -5,17 +5,63 @@
     <%-  include('../partials/nav.ejs') %>
     
     <div class="register">
-        <form class="register" method="post" action="/">
+        <form class="register">
             <label class="register" for="username">Username</label>
-            <input class="register" type="text" id="username" name="username" required>
+            <input class="register" type="text" id="username" name="username" />
+            <div class="username error"></div>
+
             <label class="register" for="email">Email</label>
-            <input class="register" type="email" id="email" name="email" required>
+            <input class="register" type="text" id="email" name="email" />
+            <div class="email error"></div>
+
             <label class="register" for="pass">Password</label>
-            <input class="register" type="password" id="pass" name="pass" required>
-            <button class="register" type="submit">Register</button>
+            <input class="register" type="password" id="pass" name="pass" />
+            <div class="pass error"></div>
+
+            <button class="register">Register</button>
         </form>
-        <a href="/login">Log-In</a>
+        <a href="/auth/login">Log-In</a>
     </div>
+
+    <script>
+        const form = document.querySelector('form');
+        const uErr = document.querySelector('.username.error');
+        const eErr = document.querySelector('.email.error');
+        const pErr = document.querySelector('.pass.error');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            uErr.textContent = '';
+            eErr.textContent = '';
+            pErr.textContent = '';
+
+            const username = form.username.value;
+            const email = form.email.value;
+            const pass = form.pass.value;
+
+            
+            fetch('/auth/register', { 
+                method: 'POST', 
+                body: JSON.stringify({ username, email, pass }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.errs) {
+                    uErr.textContent = data.errs.username;
+                    eErr.textContent = data.errs.email;
+                    pErr.textContent = data.errs.pass;
+                }
+                if (data.user) {
+                    location.assign('/dashboard');
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        });
+    </script>
 
     <%-  include('../partials/footer.ejs') %>
 </body>

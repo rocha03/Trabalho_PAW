@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../partials/head.ejs") %>
+<body>
+    <%- include('../partials/nav.ejs') %>
+
+    <div>
+        <a href="/dashboard">Voltar a Trás</a>
+
+        <% if (types.length > 0) { %>
+
+            <form action="/admin/novoServico" method="post">
+                <label for="type">Tipo de Serviço: </label>
+                <select name="type" id="type">
+                    <% types.forEach(type => { %>
+                        <option value="<%= type._id %>"><%= type.name %> <%= type._id %></option>
+                    <% }) %>
+                </select>
+
+                <label for="name">Nome do Serviço: </label>
+                <input type="text" id="name" name="name" />
+
+                <label for="desciption">Descrição: </label>
+                <textarea name="desciption" id="desciption"></textarea>
+
+                <label for="ticketTypes">Bilhetes: </label>
+                <button type="button" class="add-ticket">Adicionar Bilhete</button>
+                <div class="ticket-fields"></div>
+
+                <button type="submit">Salvar</button>
+            </form>
+
+            <a href="/admin/novoTipo">Criar um novo tipo.</a>
+        <% } else { %>
+            <div>Não há tipos de serviço guardados, <a href="/admin/novoTipo">criar um novo</a>?</div>
+        <% } %>
+    </div>
+
+    <script>
+        const button = document.querySelector('.add-ticket');
+        const fieldsDiv = document.querySelector('.ticket-fields');
+
+        button.addEventListener('click', () => {
+            const ticketNumber = fieldsDiv.children.length + 1;
+            const div = document.createElement("div");
+            const ticketNameInput = `
+                <label for="ticket-${ticketNumber}-name">Tipo de Bilhete:</label>
+                <input type="text" name="ticketPrices[${ticketNumber}][name]" id="ticket-${ticketNumber}-name" required>
+            `;
+            const ticketValueInput = `
+                <label for="ticket-${ticketNumber}-value">Valor:</label>
+                <input type="number" name="ticketPrices[${ticketNumber}][value]" id="ticket-${ticketNumber}-value" required>
+            `;
+            const ticketRemove = `<button type="button" onclick="removeTicket(this)">X</button>`;
+
+            div.innerHTML = ticketNameInput + ticketValueInput + ticketRemove;
+            fieldsDiv.appendChild(div);
+        })
+
+        function removeTicket(e) {
+            var parent = e.parentNode;
+            parent.parentNode.removeChild(parent);
+        }
+    </script>
+
+    <%- include('../partials/footer.ejs') %>
+</body>
+</html>

@@ -5,12 +5,25 @@
     <%-  include('./partials/nav.ejs') %>
 
     <div>
-        <a href="">Serviços</a>
+        <a href="/dashboard">Serviços</a>
+
+        <% if (user && user.admin) { %>
+            <a href="/admin/novoServico">Novo Serviço</a>
+            <a href="/admin/novoTipo">Novo Tipo</a>
+            <a href="">Lista de Admins</a><!-- Transformar em roles -->
+        <% } else { %>
+            <a href="">Comprar Bilhete</a><!--por no servico-->
+            <a href="">Carrinho</a>
+        <% } %>
 
         <ul>
-            <% Servicos.array.forEach(element => { %>
-                <li><%= element.name %></li>
-            <% }); %>
+            <% if (services.length > 0) { %>
+                <% services.forEach(service => { %>
+                    <li><a href="/user/servico/<%= service._id %>"><%= service.name %></a></li>
+                <% }); %>
+            <% } else { %>
+                <li>Sem eventos, <% if (user.admin) { %><a href="/admin/novoServico">criar um novo?</a><% } else { %>por agora...<% } %></li>
+            <% } %>
         </ul>
     </div>
 

@@ -11,14 +11,3 @@ p{
   font: 1000000px;
 }
 
-.navigation nav, ul{
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-end;
-  list-style: none;
-}
-
-.navigation li {
-  margin-left: 2%;
-}
-

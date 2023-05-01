@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../partials/head.ejs") %>
+<body>
+    <%-  include('../partials/nav.ejs') %>
+
+    <div>
+        <a href="/dashboard">Voltar a Trás</a>
+        
+        <form>
+            <label for="name">Tipo de Servico: </label>
+            <br>
+            <input type="text" id="name" name="name" />
+            <div class="novoTipo error"></div>
+            <br>
+
+            <button>Salvar</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.querySelector('form');
+        const errDiv = document.querySelector('.novoTipo.error');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            errDiv.textContent = '';
+
+            const name = form.name.value;
+
+            fetch('/admin/novoTipo', {
+                method: 'POST',
+                body: JSON.stringify({ name }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) errDiv.textContent = data.error.message;
+                if (data.type) location.assign('/dashboard');
+            })
+        })
+    </script>
+
+    <%-  include('../partials/footer.ejs') %>
+</body>
+</html>
